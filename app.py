@@ -41,6 +41,10 @@ def predict_label(img_bytes):
     accuracy = predictions[0][color_water]
     return dic[color_water], float(accuracy)
 
+@app.route("/health", methods=['GET'])
+def health():
+    return jsonify({"status": "ok"})
+
 @app.route("/predict", methods=['POST'])
 def predict():
     try:
