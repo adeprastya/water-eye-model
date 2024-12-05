@@ -7,20 +7,17 @@ import io
 import logging
 from werkzeug.utils import secure_filename
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# Set up logging for production
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load model
-model_path = os.getenv('MODEL_PATH', 'model/WaterEye-v0.h5')
+model_path = os.getenv('MODEL_PATH', 'model/WaterEye-v3.h5')
 model = load_model(model_path)
 model.make_predict_function()
 
-# Define labels
-dic = {0: 'black', 1: 'blue', 2: 'brown', 3: 'clean', 4: 'green', 5: 'red', 6: 'yellow'}
+# LABELS / CLASS
+dic = {0: 'black', 1: 'blue', 2: 'brown', 3: 'clear', 4: 'green', 5: 'not-water', 6: 'red', 7: 'yellow'}
 
 def predict_label(img_bytes):
     # Load image, resize, and normalize
@@ -40,13 +37,14 @@ def health():
 @app.route("/predict", methods=['POST'])
 def predict():
     try:
-        img_bytes = None  # Initialize img_bytes to ensure it's always defined
+        img_bytes = None
+
         # Check for JSON input (base64 encoded image)
         if request.is_json:
             data = request.get_json()
             if 'image' in data:
                 image_data = data['image']
-                image_data = image_data.split(',')[1]  # Strip off the base64 prefix
+                image_data = image_data.split(',')[1]  # Strip off base64 prefix
                 img_bytes = base64.b64decode(image_data)
             else:
                 return jsonify({"error": "No image data provided"}), 400
