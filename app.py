@@ -12,12 +12,14 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-model_path = os.getenv('MODEL_PATH', 'model/WaterEye-v3.h5')
+# MODEL
+MODEL_NAME='WaterEye-87.h5'
+# LABELS / CLASS
+dic = {0: 'black', 1: 'blue', 2: 'brown', 3: 'transparent', 4: 'green', 5: 'not-water', 6: 'red', 7: 'yellow'}
+
+model_path = os.getenv('MODEL_PATH', 'model/' + MODEL_NAME)
 model = load_model(model_path)
 model.make_predict_function()
-
-# LABELS / CLASS
-dic = {0: 'black', 1: 'blue', 2: 'brown', 3: 'clear', 4: 'green', 5: 'not-water', 6: 'red', 7: 'yellow'}
 
 def predict_label(img_bytes):
     # Load image, resize, and normalize
@@ -32,7 +34,7 @@ def predict_label(img_bytes):
 
 @app.route("/health", methods=['GET'])
 def health():
-    return jsonify({"status": "ok"})
+    return jsonify({"status": "OK", "model": MODEL_NAME})
 
 @app.route("/predict", methods=['POST'])
 def predict():
