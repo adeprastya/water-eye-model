@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # MODEL
-MODEL_NAME='WaterEye-87.h5'
+MODEL_NAME='WaterEye-prod.h5'
 # LABELS / CLASS
 dic = {0: 'black', 1: 'blue', 2: 'brown', 3: 'transparent', 4: 'green', 5: 'not-water', 6: 'red', 7: 'yellow'}
 
